@@ -1,0 +1,30 @@
+html, body {
+    /*font-family: 'Roboto', sans-serif;*/
+    /*background-color: #f0f0f0;*/
+}
+
+.navbar {
+    border-bottom: 1px solid #d3d3d398;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.logo {
+    height: 50px;
+}
+
+.navbar-container {
+    max-width: 900px;
+}
+
+.content-container {
+    max-width: 900px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0px;
+}
+
+.status {
+    font-size: 50px;
+    margin-left: 18px;
+}
