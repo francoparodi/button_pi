@@ -2,7 +2,7 @@ function socketIOinit() {
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on('connect', function() {
-        console.log('Websocket connected!');
+        console.log('Websocket connected');
     });
 
     socket.emit('handleDaemon', {name: '1', action: 'START'});
@@ -12,6 +12,6 @@ function socketIOinit() {
         var jObj = JSON.parse(jStr);
         var eventNumber = jObj.eventNumber;
         console.log(jObj.datetime + ' ' + eventNumber);
-        document.getElementById("eventNumber").innerHTML = staeventNumber;
+        document.getElementById("eventNumber").innerHTML = eventNumber;
     });
 }
