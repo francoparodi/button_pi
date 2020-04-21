@@ -5,7 +5,6 @@ function socketIOinit() {
         console.log('Websocket connected!');
     });
 
-    //start daemon to read temperature
     socket.emit('handleDaemon', {name: '1', action: 'START'});
 
     socket.on('daemonProcess', function(data) {
