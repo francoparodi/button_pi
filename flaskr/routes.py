@@ -45,6 +45,8 @@ def on_handleDaemon(data):
         print("Button pushed")
         global gPIOEvent
         gPIOEvent = True
+        global eventNumber
+        eventNumber+=1
 
     global isDaemonStarted
     if action == 'START':
