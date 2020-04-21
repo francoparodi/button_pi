@@ -11,7 +11,7 @@ socketio = SocketIO()
 stop_event = threading.Event()
 daemon = threading.Thread()
 isDaemonStarted = False
-status = "0"
+eventNumber = 0
 secondsBetweenGPIOStatus = 1
 gPIOEvent = False
 
@@ -37,12 +37,12 @@ def on_handleDaemon(data):
         global gPIOEvent
         while not stop_event.is_set():
             if gPIOEvent:
-                emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'status': status})
+                emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'eventNumber': str(eventNumber)})
                 gPIOEvent = False
             time.sleep(secondsBetweenGPIOStatus)
     
     def button_callback(channel):
-        print("Button was pushed!")
+        print("Button pushed")
         global gPIOEvent
         gPIOEvent = True
 
@@ -53,7 +53,7 @@ def on_handleDaemon(data):
             GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
             GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin 
             GPIO.add_event_detect(10,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 10 rising edge
-            daemon.__init__(target=daemonProcess, args=(name, status, stop_event), daemon=True)
+            daemon.__init__(target=daemonProcess, args=(name, str(eventNumber), stop_event), daemon=True)
             daemon.start()
             gPIOEvent = False
             isDaemonStarted = True
