@@ -37,7 +37,7 @@ def on_handleDaemon(data):
         global gPIOEvent
         while not stop_event.is_set():
             if gPIOEvent:
-                emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'eventNumber': str(eventNumber)})
+                socketio.emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'eventNumber': str(eventNumber)})
                 gPIOEvent = False
             time.sleep(secondsBetweenGPIOStatus)
     
