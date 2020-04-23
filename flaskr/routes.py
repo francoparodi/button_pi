@@ -42,7 +42,7 @@ def on_handleDaemon(data):
             time.sleep(secondsBetweenGPIOStatus)
     
     def button_callback(channel):
-        print("Button pushed")
+        print("Button pushed on channel #" + str(channel))
         global gPIOEvent
         gPIOEvent = True
         global eventNumber
@@ -55,6 +55,8 @@ def on_handleDaemon(data):
             GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
             GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin 
             GPIO.add_event_detect(10,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 10 rising edge
+            GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 18 to be an input pin 
+            GPIO.add_event_detect(18,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 18 rising edge
             daemon.__init__(target=daemonProcess, args=(name, str(eventNumber), stop_event), daemon=True)
             daemon.start()
             gPIOEvent = False
