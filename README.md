@@ -1,5 +1,9 @@
-# Thermo_pi
-Simple button event with Raspberry pi
+# Button_pi
+Simple sample of events from two buttons with Raspberry pi
+
+### Coonection schema
+![Connection Schema](docs/button_pi_bb.png)
+
 
 ## Getting Started
 
