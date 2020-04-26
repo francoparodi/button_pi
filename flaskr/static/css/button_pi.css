@@ -40,3 +40,27 @@ html, body {
     text-align: center;
     color: blue;
 }
+
+.channelLeftIncrement {
+    font-size: 100px;
+    text-align: center;
+    color: red;
+}
+
+.channelRightIncrement {
+    font-size: 100px;
+    text-align: center;
+    color: blue;
+}
+
+.channelLeftDecrement {
+    font-size: 100px;
+    text-align: center;
+    color: red;
+}
+
+.channelRightDecrement {
+    font-size: 100px;
+    text-align: center;
+    color: blue;
+}
