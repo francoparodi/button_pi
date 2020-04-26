@@ -10,8 +10,10 @@ function socketIOinit() {
     socket.on('daemonProcess', function(data) {
         var jStr = JSON.stringify(data);
         var jObj = JSON.parse(jStr);
-        var eventNumber = jObj.eventNumber;
-        console.log(jObj.datetime + ' ' + eventNumber);
-        document.getElementById("eventNumber").innerHTML = eventNumber;
+        var channel10 = jObj.channel10;
+        var channel18 = jObj.channel18;
+        console.log(jObj.datetime + ' ' + 'Channel10: ' + channel10 + " - Channel18: " + channel18);
+        document.getElementById("channel10").innerHTML = channel10;
+        document.getElementById("channel18").innerHTML = channel18;
     });
 }

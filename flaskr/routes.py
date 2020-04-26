@@ -11,9 +11,9 @@ socketio = SocketIO()
 stop_event = threading.Event()
 daemon = threading.Thread()
 isDaemonStarted = False
-eventNumber = 0
 secondsBetweenGPIOStatus = 1
 gPIOEvent = False
+dictEvents = {'10': 5, '18': 12}
 
 view = Blueprint("view", __name__)
 
@@ -25,6 +25,13 @@ def homepage():
 def settings():
     return render_template("settings.html")
 
+@socketio.on('connect')
+def on_connect():
+    name='name'
+    channel10 = dictEvents['10']
+    channel18 = dictEvents['18']
+    socketio.emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'channel10': str(channel10), 'channel18': str(channel18)})
+
 @socketio.on('handleDaemon')
 def on_handleDaemon(data):
     global gPIOEvent
@@ -32,21 +39,22 @@ def on_handleDaemon(data):
     action=data['action']
 
     @copy_current_request_context
-    def daemonProcess(name, status, stop_event):
+    def daemonProcess(name, stop_event):
         # Daemon needed cause emit from button_callback is not allowed
         global gPIOEvent
         while not stop_event.is_set():
             if gPIOEvent:
-                socketio.emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'eventNumber': str(eventNumber)})
+                channel10 = dictEvents['10']
+                channel18 = dictEvents['18']
+                socketio.emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'channel10': str(channel10), 'channel18': str(channel18)})
                 gPIOEvent = False
             time.sleep(secondsBetweenGPIOStatus)
     
     def button_callback(channel):
-        print("Button pushed on channel #" + str(channel))
+        print("Event on channel #" + str(channel))
         global gPIOEvent
         gPIOEvent = True
-        global eventNumber
-        eventNumber+=1
+        dictEvents[str(channel)] = dictEvents[str(channel)] + 1
 
     global isDaemonStarted
     if action == 'START':
@@ -57,12 +65,12 @@ def on_handleDaemon(data):
             GPIO.add_event_detect(10,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 10 rising edge
             GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 18 to be an input pin 
             GPIO.add_event_detect(18,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 18 rising edge
-            daemon.__init__(target=daemonProcess, args=(name, str(eventNumber), stop_event), daemon=True)
+            daemon.__init__(target=daemonProcess, args=(name, stop_event), daemon=True)
             daemon.start()
             gPIOEvent = False
             isDaemonStarted = True
     else:
-        GPIO.cleanup() # Clean up
+        GPIO.cleanup()
         stop_event.set()
         daemon.join()
         stop_event.clear()
