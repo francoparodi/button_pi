@@ -30,13 +30,13 @@ html, body {
 }
 
 .channelLeft {
-    font-size: 140px;
+    font-size: 160px;
     text-align: center;
     color: red;
 }
 
 .channelRight {
-    font-size: 140px;
+    font-size: 160px;
     text-align: center;
     color: blue;
 }

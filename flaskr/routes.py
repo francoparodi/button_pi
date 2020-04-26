@@ -2,7 +2,17 @@ from datetime import datetime
 import threading, time
 from flask import current_app as app
 from flask import Blueprint, render_template, redirect, url_for, copy_current_request_context
-#import RPi.GPIO as GPIO
+
+try:
+    import RPi.GPIO as GPIO
+except (RuntimeError, ModuleNotFoundError):
+    import sys
+    import fake_rpi
+    sys.modules['RPi'] = fake_rpi.RPi     # Fake RPi
+    sys.modules['RPi.GPIO'] = fake_rpi.RPi.GPIO # Fake GPIO
+    sys.modules['smbus'] = fake_rpi.smbus # Fake smbus (I2C)
+    import RPi.GPIO as GPIO
+    import smbus
 
 from flask_socketio import SocketIO, emit
 
@@ -74,19 +84,19 @@ def on_handleDaemon(data):
     global isDaemonStarted
     if action == 'START':
         if not isDaemonStarted:
-            '''GPIO.setwarnings(False) # Ignore warning for now
+            GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
             GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin 
             GPIO.add_event_detect(10,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 10 rising edge
             GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 18 to be an input pin 
             GPIO.add_event_detect(18,GPIO.RISING,callback=button_callback, bouncetime=2000) # Setup event on pin 18 rising edge
-            '''
+            
             daemon.__init__(target=daemonProcess, args=(name, stop_event), daemon=True)
             daemon.start()
             gPIOEvent = False
             isDaemonStarted = True
     else:
-        #GPIO.cleanup()
+        GPIO.cleanup()
         stop_event.set()
         daemon.join()
         stop_event.clear()
